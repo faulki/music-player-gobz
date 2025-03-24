@@ -37,6 +37,7 @@ cacheDOM() {
   this.trackTitle = document.querySelector("#track-title");
   this.songImage = document.querySelector("#songImage");
   this.currentSongContainer = document.getElementById("currentSongContainer");
+  this.background = document.getElementById("backgroundCircle")
   this.progressEl = document.querySelector('input[type="range"]');
   this.mouseDownOnSlider = false;
   this.audio.addEventListener("loadeddata", () => {
@@ -59,6 +60,18 @@ cacheDOM() {
   });
 }
 
+changeBackgroundColor(){
+  if(this.currentTrackIndex == 0){
+    this.background.style.backgroundColor = "#10cbf5";
+  }
+  else if(this.currentTrackIndex == 1) {
+    this.background.style.backgroundColor = "#c6c1a6";
+  }
+  else if(this.currentTrackIndex == 2) {
+    this.background.style.backgroundColor = "#f7f8fb";
+  }
+}
+
 bindEvents() {
   this.playButton.addEventListener("click", () => this.togglePlay());
   this.nextButton.addEventListener("click", () => this.nextTrack()); // Bug: nextButton est undefined
@@ -75,7 +88,6 @@ this.audio.src = this.tracks[this.currentTrackIndex].url;
 this.trackTitle.textContent = this.tracks[this.currentTrackIndex].title;
 this.imgSrc = this.tracks[this.currentTrackIndex].img
 this.songImage.src = this.imgSrc
-// this.togglePlay();
 }
 
 togglePlay() {
@@ -98,6 +110,8 @@ nextTrack() {
   this.loadTrack();
   this.audio.play(); 
   this.isPlaying = true;
+  console.log(this.currentTrackIndex);
+  this.changeBackgroundColor();
 }
 
 prevTrack() {
@@ -105,6 +119,8 @@ prevTrack() {
   this.loadTrack();
   this.audio.play();
   this.isPlaying = true;
+  console.log(this.currentTrackIndex);
+  this.changeBackgroundColor();
 }
 
 }

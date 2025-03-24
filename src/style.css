@@ -82,6 +82,7 @@ button {
   width: 100%;
   margin: auto;
   margin-top: 32vh;
+  z-index: 10;
 }
 
 .controlSong{
@@ -94,10 +95,15 @@ button {
 }
 
 .background{
+  position: absolute;
   border-radius: 50%;
   background-color: #10cbf5;
-  filter: blur(10rem);
+  filter: blur(250px);
   height: 300px;
+  width: 300px;
+  left: 40px;
+  top: 80px;
+  transition: all 1s ease-in-out;
 }
 
 /*********** Baseline, reset styles ***********/
