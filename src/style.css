@@ -1,6 +1,20 @@
+@font-face {
+  font-family: fontitc;
+  src: url(../public/avantgarde_demi.ttf)
+}
+
+html{
+  height: 100%;
+  width: 100%;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
+  height: 100%;
+  width: 100%;
+  font-family: fontitc;
+  background-color: #333333;
+  color: white;
+  margin: 0;
 }
 
 ul {
@@ -46,4 +60,75 @@ button {
   background: red;
   position: absolute;
   cursor: pointer;
+}
+
+.container{
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+#songImage{
+  height: 170px;
+  border-radius: 7px;
+}
+
+.currentSongContainer{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  margin-top: 32vh;
+}
+
+.controlSong{
+  width: 100%;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  flex-direction: column;
+}
+
+.background{
+  border-radius: 50%;
+  background-color: #10cbf5;
+  filter: blur(10rem);
+  height: 300px;
+}
+
+/*********** Baseline, reset styles ***********/
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 80%;
+}
+
+/* Removes default focus */
+input[type="range"]:focus {
+  outline: none;
+}
+
+/******** Chrome, Safari, Opera and Edge Chromium styles ********/
+/* slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #d1d1d1;
+  border-radius: 0.1rem;
+  height: 0.2rem;
+}
+
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -6.4px; /* Centers thumb on the track */
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  height: 1rem;
+  width: 1rem;
 }

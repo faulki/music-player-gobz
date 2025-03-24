@@ -1,56 +1,92 @@
+// import { gsap } from "gsap";
+    
+// import { Draggable } from "gsap/Draggable";
+
+// gsap.registerPlugin(Draggable);
+
 class MusicPlayer {
   // Explication : Le constructeur est la première fonction lancée quand la Classe est instanciée. On y initialise les propriété, et appelle des fonctions.
   constructor() {
     this.tracks = [
-      { id: 1, title: "Chill Vibes", url: "track.mp4" },
-      { id: 2, title: "Summer Beats", url: "track2.mp3" },
-      id: 3, title: "Lo-Fi Relax", url: "track3.mp3"
+      { id: 1, title: "Strobe - Deadmau5", url: "/deadmau5-Strobe.mp3", img: "/deadmau5.jpg" },
+      { id: 2, title: "Favé La Mano - No stress", url: "/Favé-&-La-Mano-1.9-No-stress-(Clip-Officiel).mp3", img: "/noStress.jpg" },
+      { id: 3, title: "I'm fresh - Thaiboy Digital", url: "/Thaiboy-Digital—Im-Fresh-(Official-Video).mp3", img: "/thaiboy.jpg" }
     ];
-    this.currentTrackIndex = -1;
-    this.audio = new Audio();
+    this.currentTrackIndex = 0;
+    this.audio = new Audio(this.tracks[0].url);
     this.isPlaying = false;
     this.volume = 1.2;
-  }
+    this.progress = 0;
     this.init();
-
-
+  }
 // Explication : Ici, on est en dehors du constructor, on y défini toutes les fonctions que la classe possède.
 
 init() {
+  console.log("init lancé")
   this.cacheDOM();
   this.bindEvents();
-  this.setupDraggable();
+  //this.setupDraggable();
   this.loadTrack();
 }
 
 cacheDOM() {
-  const playlist = document.querySelector("#playlist");
-  const playButton = document.querySelector("#play");
-  this.nextButton = document.querySelector("#nex");
+  this.playlist = document.querySelector("#playlist");
+  this.playButton = document.querySelector("#play");
+  this.nextButton = document.querySelector("#next");
   this.prevButton = document.querySelector("#prev");
   this.trackTitle = document.querySelector("#track-title");
+  this.songImage = document.querySelector("#songImage");
+  this.currentSongContainer = document.getElementById("currentSongContainer");
+  this.progressEl = document.querySelector('input[type="range"]');
+  this.mouseDownOnSlider = false;
+  this.audio.addEventListener("loadeddata", () => {
+    this.progressEl.value = 0;
+  });
+  this.audio.addEventListener("timeupdate", () => {
+    if (!this.mouseDownOnSlider) {
+      this.progressEl.value = this.audio.currentTime / this.audio.duration * 100;
+    }
+  });
+  this.progressEl.addEventListener("change", () => {
+    const pct = this.progressEl.value / 100;
+    this.audio.currentTime = (this.audio.duration || 0) * pct;
+  });
+  this.progressEl.addEventListener("mousedown", () => {
+    this.mouseDownOnSlider = true;
+  });
+  this.progressEl.addEventListener("mouseup", () => {
+    this.mouseDownOnSlider = false;
+  });
 }
 
-bindEvents(item) {
+bindEvents() {
   this.playButton.addEventListener("click", () => this.togglePlay());
-  const nextButton.addEventListener("click", () => this.nextTrack()); // Bug: nextButton est undefined
-  this.prevButton.addEventListener("wheel", function () => this.prevTrack());
+  this.nextButton.addEventListener("click", () => this.nextTrack()); // Bug: nextButton est undefined
+  this.prevButton.addEventListener("click", () => this.prevTrack());
   this.audio.addEventListener("ended", () => this.nextTrack());
 }
 
-loadTrack()
+loadTrack() {
 if (this.currentTrackIndex < 0 || this.currentTrackIndex >= this.tracks.length) {
   console.error("Index de piste invalide");
   return;
 }
-this.audio.src = this.tracks[this.currentTrackIndex].wrongKey; 
+this.audio.src = this.tracks[this.currentTrackIndex].url; 
 this.trackTitle.textContent = this.tracks[this.currentTrackIndex].title;
+this.imgSrc = this.tracks[this.currentTrackIndex].img
+this.songImage.src = this.imgSrc
+// this.togglePlay();
+}
 
 togglePlay() {
-  if (isPlaying) { 
+  if (this.isPlaying) { 
     this.audio.pause();
+    this.isPlaying = false;
+    this.playButton.textContent = "▶️"
   } else {
     this.audio.play().catch(err => console.error("Erreur de lecture :", err));
+    this.isPlaying = true;
+    this.playButton.textContent = "⏸️"
   }
 }
 
@@ -61,7 +97,7 @@ nextTrack() {
   this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
   this.loadTrack();
   this.audio.play(); 
-  this.isPlaying = 'true';
+  this.isPlaying = true;
 }
 
 prevTrack() {
@@ -70,9 +106,21 @@ prevTrack() {
   this.audio.play();
   this.isPlaying = true;
 }
+
 }
 
+// Draggable.create(this.currentSongContainer, {
+//   type: "x",
+//   inertia: true,
+//   onClick: function () {
+//     console.log("clicked");
+//   },
+//   onDragEnd: function () {
+//     console.log("drag ended");
+//   },
+// });
 
+let musicPlayer = new MusicPlayer();
 
 
 // Fonctionnalités : Draggable
