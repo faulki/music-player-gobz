@@ -1,8 +1,10 @@
-// import { gsap } from "gsap";
+import { gsap } from "gsap";
     
-// import { Draggable } from "gsap/Draggable";
+import { Draggable } from "gsap/Draggable";
 
-// gsap.registerPlugin(Draggable);
+gsap.registerPlugin(Draggable);
+gsap.registerPlugin(InertiaPlugin);
+gsap.registerPlugin(SplitText) 
 
 class MusicPlayer {
   // Explication : Le constructeur est la première fonction lancée quand la Classe est instanciée. On y initialise les propriété, et appelle des fonctions.
@@ -10,7 +12,8 @@ class MusicPlayer {
     this.tracks = [
       { id: 1, title: "Strobe - Deadmau5", url: "/deadmau5-Strobe.mp3", img: "/deadmau5.jpg" },
       { id: 2, title: "Favé La Mano - No stress", url: "/Favé-&-La-Mano-1.9-No-stress-(Clip-Officiel).mp3", img: "/noStress.jpg" },
-      { id: 3, title: "I'm fresh - Thaiboy Digital", url: "/Thaiboy-Digital—Im-Fresh-(Official-Video).mp3", img: "/thaiboy.jpg" }
+      { id: 3, title: "I'm fresh - Thaiboy Digital", url: "/Thaiboy-Digital—Im-Fresh-(Official-Video).mp3", img: "/thaiboy.jpg" },
+      { id: 4, title: "SALAH MALIKOUM", url: "/salahmalikoum.mp3", img: "/donpollo.jpg" }
     ];
     this.currentTrackIndex = 0;
     this.audio = new Audio(this.tracks[0].url);
@@ -18,6 +21,7 @@ class MusicPlayer {
     this.volume = 1.2;
     this.progress = 0;
     this.init();
+    requestAnimationFrame(this.updatePositions.bind(this))
   }
 // Explication : Ici, on est en dehors du constructor, on y défini toutes les fonctions que la classe possède.
 
@@ -25,8 +29,9 @@ init() {
   console.log("init lancé")
   this.cacheDOM();
   this.bindEvents();
-  //this.setupDraggable();
+  this.setupDraggable();
   this.loadTrack();
+  this.textAnimation();
 }
 
 cacheDOM() {
@@ -36,7 +41,14 @@ cacheDOM() {
   this.prevButton = document.querySelector("#prev");
   this.trackTitle = document.querySelector("#track-title");
   this.songImage = document.querySelector("#songImage");
+  this.trackTitleNext = document.getElementById("track-title-next");
+  this.songImageNext = document.getElementById("songImageNext");
+  this.slider = document.getElementById("slider")
+  this.trackTitlePrevious = document.getElementById("track-title-previous");
+  this.songImagePrevious = document.getElementById("songImagePrevious");
   this.currentSongContainer = document.getElementById("currentSongContainer");
+  this.previousSongContainer = document.getElementById("previousSongContainer");
+  this.nextSongContainer = document.getElementById("nextSongContainer");
   this.background = document.getElementById("backgroundCircle")
   this.progressEl = document.querySelector('input[type="range"]');
   this.mouseDownOnSlider = false;
@@ -68,7 +80,10 @@ changeBackgroundColor(){
     this.background.style.backgroundColor = "#c6c1a6";
   }
   else if(this.currentTrackIndex == 2) {
-    this.background.style.backgroundColor = "#f7f8fb";
+    this.background.style.backgroundColor = "#ffffff";
+  }
+  else if(this.currentTrackIndex == 3) {
+    this.background.style.backgroundColor = "#a16b52";
   }
 }
 
@@ -88,6 +103,14 @@ this.audio.src = this.tracks[this.currentTrackIndex].url;
 this.trackTitle.textContent = this.tracks[this.currentTrackIndex].title;
 this.imgSrc = this.tracks[this.currentTrackIndex].img
 this.songImage.src = this.imgSrc
+
+this.trackTitlePrevious.textContent = this.tracks[(this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length].title
+this.imgSrcPrevious = this.tracks[(this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length].img
+this.songImagePrevious.src = this.imgSrcPrevious;
+
+this.trackTitleNext.textContent = this.tracks[(this.currentTrackIndex + 1) % this.tracks.length].title
+this.imgSrcNext = this.tracks[(this.currentTrackIndex + 1) % this.tracks.length].img
+this.songImageNext.src = this.imgSrcNext;
 }
 
 togglePlay() {
@@ -110,8 +133,9 @@ nextTrack() {
   this.loadTrack();
   this.audio.play(); 
   this.isPlaying = true;
-  console.log(this.currentTrackIndex);
   this.changeBackgroundColor();
+  this.textAnimation();
+  this.drag[0].x = 0;
 }
 
 prevTrack() {
@@ -119,22 +143,48 @@ prevTrack() {
   this.loadTrack();
   this.audio.play();
   this.isPlaying = true;
-  console.log(this.currentTrackIndex);
   this.changeBackgroundColor();
+  this.textAnimation();
+  this.drag[0].x = 0;
+}
+
+setupDraggable(){
+  this.drag = Draggable.create(this.slider, {
+    type: "x",
+    inertia: true,
+    snap: [-300, 0, 300],
+    onDragEnd: function() {
+      setTimeout(() => {
+        console.log(this.drag)
+      }, "2000")
+    },
+  });
+}
+
+updatePositions(){
+  // gsap.set(this.slider, { x: '0'})
+  console.log(this.drag[0].x)
+  this.currentSongContainer.style.filter = `blur(${Math.abs(-this.drag[0].x / 100)}px)`
+  this.currentSongContainer.style.transform = `scale(${-Math.abs(this.drag[0].x / 1000)+1})`
+  this.previousSongContainer.style.filter = `blur(${Math.abs((-this.drag[0].x + 270) / 100)}px)`
+  this.nextSongContainer.style.filter = `blur(${Math.abs((-this.drag[0].x - 270) / 100)}px)`
+  requestAnimationFrame(this.updatePositions.bind(this))
+}
+
+textAnimation(){
+  var split = new SplitText(this.trackTitle, {type: "chars"});
+//now animate each character into place from 100px above, fading in:
+gsap.from(split.chars, {
+  duration: 1, 
+  y: 50, 
+  autoAlpha: 0, 
+  stagger: 0.03
+});
 }
 
 }
 
-// Draggable.create(this.currentSongContainer, {
-//   type: "x",
-//   inertia: true,
-//   onClick: function () {
-//     console.log("clicked");
-//   },
-//   onDragEnd: function () {
-//     console.log("drag ended");
-//   },
-// });
+
 
 let musicPlayer = new MusicPlayer();
 

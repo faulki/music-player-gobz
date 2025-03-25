@@ -9,10 +9,19 @@
 <body>
     <div class="container">
         <div class="background" id="backgroundCircle"></div>
-        <div class="currentSongContainer" id="currentSongContainer">
-            <div class="songImage"><img id="songImage" alt=""></div>
-            <div class="songTitle" id="track-title"></div>
-            <div class="songCreator"></div>
+        <div class="slider" id="slider">
+            <div class="previousSong" id="previousSongContainer">
+                <div class="songImage"><img id="songImagePrevious" alt=""></div>
+                <div class="songTitle" id="track-title-previous"></div>
+            </div>
+            <div class="currentSongContainer" id="currentSongContainer">
+                <div class="songImage"><img id="songImage" alt=""></div>
+                <div class="songTitle" id="track-title"></div>
+            </div>
+            <div class="nextSong" id="nextSongContainer">
+                <div class="songImage"><img id="songImageNext" alt=""></div>
+                <div class="songTitle" id="track-title-next"></div>
+            </div>
         </div>
         <div class="controlSong">
             <div class="barreAvancement" id="barreAvancement">
@@ -26,5 +35,7 @@
         </div>
     </div>
 </body>
-<script src="./src/main.js"></script>
+<script type="module" src="./src/main.js"></script>
+<script src="https://assets.codepen.io/16327/InertiaPlugin.min.js"></script>
+<script src="https://assets.codepen.io/16327/SplitText3.min.js"></script>
 </html>
