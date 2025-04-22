@@ -136,6 +136,7 @@ nextTrack() {
   this.changeBackgroundColor();
   this.textAnimation();
   this.drag[0].x = 0;
+  this.slider.style.transform = "translate3d(0px, 0px, 0px)"
 }
 
 prevTrack() {
@@ -146,6 +147,7 @@ prevTrack() {
   this.changeBackgroundColor();
   this.textAnimation();
   this.drag[0].x = 0;
+  this.slider.style.transform = "translate3d(0px, 0px, 0px)"
 }
 
 setupDraggable(){
@@ -153,23 +155,21 @@ setupDraggable(){
     type: "x",
     inertia: true,
     snap: [-580, 0, 580],
-    onThrowComplete: function() {
-      // if (this.drag[0].x === 580) {
-      //   prevTrack();
-      //   console.log("précédent")
-      // }
-      // if (this.drag[0].x === -580) {
-      //   nextTrack();
-      //   console.log("suivant")       
-      // }
-      console.log(this.drag) 
+    onThrowComplete: () => {
+      if (this.drag[0].x === 580) {
+        this.prevTrack();
+        console.log("précédent")
+      }
+      if (this.drag[0].x === -580) {
+        this.nextTrack();
+        console.log("suivant")       
+      }
     },
   });
 }
 
 updatePositions(){
   // gsap.set(this.slider, { x: '0'})
-  console.log(this.drag[0].x)
   this.currentSongContainer.style.filter = `blur(${Math.abs(-this.drag[0].x / 100)}px)`
   this.currentSongContainer.style.transform = (`scale(${-Math.abs(this.drag[0].x / 1600)+1})`)
   this.currentSongContainer.style.transform = (`translate(0px, ${-Math.abs(this.drag[0].x +200)/ 100})px`)
