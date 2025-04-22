@@ -152,11 +152,17 @@ setupDraggable(){
   this.drag = Draggable.create(this.slider, {
     type: "x",
     inertia: true,
-    snap: [-300, 0, 300],
-    onDragEnd: function() {
-      setTimeout(() => {
-        console.log(this.drag)
-      }, "2000")
+    snap: [-580, 0, 580],
+    onThrowComplete: function() {
+      // if (this.drag[0].x === 580) {
+      //   prevTrack();
+      //   console.log("précédent")
+      // }
+      // if (this.drag[0].x === -580) {
+      //   nextTrack();
+      //   console.log("suivant")       
+      // }
+      console.log(this.drag) 
     },
   });
 }
@@ -165,9 +171,10 @@ updatePositions(){
   // gsap.set(this.slider, { x: '0'})
   console.log(this.drag[0].x)
   this.currentSongContainer.style.filter = `blur(${Math.abs(-this.drag[0].x / 100)}px)`
-  this.currentSongContainer.style.transform = `scale(${-Math.abs(this.drag[0].x / 1000)+1})`
-  this.previousSongContainer.style.filter = `blur(${Math.abs((-this.drag[0].x + 270) / 100)}px)`
-  this.nextSongContainer.style.filter = `blur(${Math.abs((-this.drag[0].x - 270) / 100)}px)`
+  this.currentSongContainer.style.transform = (`scale(${-Math.abs(this.drag[0].x / 1600)+1})`)
+  this.currentSongContainer.style.transform = (`translate(0px, ${-Math.abs(this.drag[0].x +200)/ 100})px`)
+  this.previousSongContainer.style.filter = `blur(${Math.abs((-this.drag[0].x + 580) / 100)}px)`
+  this.nextSongContainer.style.filter = `blur(${Math.abs((-this.drag[0].x - 580) / 100)}px)`
   requestAnimationFrame(this.updatePositions.bind(this))
 }
 
