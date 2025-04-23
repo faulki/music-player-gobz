@@ -89,7 +89,7 @@ changeBackgroundColor(){
 
 bindEvents() {
   this.playButton.addEventListener("click", () => this.togglePlay());
-  this.nextButton.addEventListener("click", () => this.nextTrack()); // Bug: nextButton est undefined
+  this.nextButton.addEventListener("click", () => this.nextTrack());
   this.prevButton.addEventListener("click", () => this.prevTrack());
   this.audio.addEventListener("ended", () => this.nextTrack());
 }
@@ -129,25 +129,36 @@ togglePlay() {
 // Peux tu créer une seule fonction à la place de deux ? Comment gérerais tu le cas à ce moment ?
 
 nextTrack() {
-  this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
-  this.loadTrack();
-  this.audio.play(); 
-  this.isPlaying = true;
-  this.changeBackgroundColor();
-  this.textAnimation();
-  this.drag[0].x = 0;
-  this.slider.style.transform = "translate3d(0px, 0px, 0px)"
+    this.slider.style.transform = "translate3d(-580px, 0px, 0px)"
+    this.drag[0].x = -580;
+  setTimeout(() => {
+    this.currentTrackIndex = (this.currentTrackIndex + 1) % this.tracks.length;
+    this.loadTrack();
+    this.audio.play(); 
+    this.isPlaying = true;
+    this.changeBackgroundColor();
+    this.textAnimation();
+    this.drag[0].x = 0;
+    this.drag[0].endX = 0;
+    this.slider.style.transform = "translate3d(0px, 0px, 0px)"
+  }, "1000");
 }
 
 prevTrack() {
-  this.currentTrackIndex = (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
-  this.loadTrack();
-  this.audio.play();
-  this.isPlaying = true;
-  this.changeBackgroundColor();
-  this.textAnimation();
-  this.drag[0].x = 0;
-  this.slider.style.transform = "translate3d(0px, 0px, 0px)"
+  this.slider.style.transform = "translate3d(580px, 0px, 0px)"
+    this.drag[0].x = 580;
+  setTimeout(() => {
+    this.currentTrackIndex = (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
+    this.loadTrack();
+    this.audio.play();
+    this.isPlaying = true;
+    this.changeBackgroundColor();
+    this.textAnimation();
+    this.drag[0].x = 0;
+    this.drag[0].endX = 0;
+    this.slider.style.transform = "translate3d(0px, 0px, 0px)"
+  }, "1000");
+
 }
 
 setupDraggable(){
@@ -162,7 +173,7 @@ setupDraggable(){
       }
       if (this.drag[0].x === -580) {
         this.nextTrack();
-        console.log("suivant")       
+        console.log("suivant");
       }
     },
   });
